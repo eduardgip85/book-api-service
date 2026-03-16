@@ -19,6 +19,7 @@ const create_book_dto_1 = require("./dto/create-book.dto");
 const update_book_dto_1 = require("./dto/update-book.dto");
 const book_schema_1 = require("./schemas/book.schema");
 const swagger_1 = require("@nestjs/swagger");
+const passport_1 = require("@nestjs/passport");
 let BooksController = class BooksController {
     booksService;
     constructor(booksService) {
@@ -62,11 +63,12 @@ __decorate([
 ], BooksController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Post)(),
-    (0, swagger_1.ApiOperation)({ summary: 'Crea un nou llibre' }),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Crea un nou llibre (requereix autenticació)' }),
     (0, swagger_1.ApiBody)({ type: create_book_dto_1.CreateBookDto, description: 'Dades del llibre a crear' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Llibre creat correctament', type: book_schema_1.Book }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'Dades invàlides' }),
-    (0, swagger_1.ApiResponse)({ status: 409, description: 'L\'ISBN ja existeix' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'No autoritzat' }),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true })),
     __param(0, (0, common_1.Body)()),
@@ -76,11 +78,13 @@ __decorate([
 ], BooksController.prototype, "create", null);
 __decorate([
     (0, common_1.Put)(':id'),
-    (0, swagger_1.ApiOperation)({ summary: 'Actualitza un llibre existent' }),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Actualitza un llibre existent (requereix autenticació)' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID del llibre', type: String }),
     (0, swagger_1.ApiBody)({ type: update_book_dto_1.UpdateBookDto, description: 'Dades del llibre a actualitzar' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Llibre actualitzat', type: book_schema_1.Book }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'Dades invàlides' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'No autoritzat' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Llibre no trobat' }),
     (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true })),
     __param(0, (0, common_1.Param)('id')),
@@ -91,9 +95,12 @@ __decorate([
 ], BooksController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
-    (0, swagger_1.ApiOperation)({ summary: 'Elimina un llibre' }),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Elimina un llibre (requereix autenticació)' }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'ID del llibre', type: String }),
-    (0, swagger_1.ApiResponse)({ status: 204, description: 'Llibre eliminat correctament' }),
+    (0, swagger_1.ApiResponse)({ status: 204, description: 'Llibre eliminat' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'No autoritzat' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Llibre no trobat' }),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
     __param(0, (0, common_1.Param)('id')),
